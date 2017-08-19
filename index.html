@@ -4870,6 +4870,46 @@
         evt.currentTarget.className += " active";
     }
 
+    function convertMmToInchCpvc(itemString){      
+      if(itemString.split("||")[1].includes("mm")){
+        
+      }else{
+        return itemString;
+      }
+
+      var mmToInch = {
+        "15":"1/2",
+        "20":"3/4",
+        "25":"1",
+        "32":"1-1/4",
+        "40":"1-1/2",
+        "50":"2"
+      };
+      var finalElems = itemString.split("||");
+      var res = itemString.split("||")[1].replace(/Size/g, "").replace(/mm/g,"").trim();
+      
+      if(res.includes("*")){
+        var elems = res.split("*");
+        var inch1 = mmToInch[elems[0]];
+        var inch2 = mmToInch[elems[1]];
+        var finalString = inch1+"*"+inch2+" inches";
+        finalString="Size: "+finalString;
+        finalElems[1]=finalString;
+      }else{
+        var inch = mmToInch[res];
+        var finalString = inch+" inches";
+        finalString="Size: "+finalString;
+        finalElems[1]=finalString;
+      }
+
+
+      var result = "";
+      for(var i=0;i<finalElems.length;i++){
+        result+=finalElems[i]+" || ";
+      }
+      return result;
+    }
+
     function review(){
 
       document.getElementById("UPVC").style="none";
@@ -4890,8 +4930,10 @@
 
 
           if(fieldName.startsWith("CPVC")){
+            params=convertMmToInchCpvc(params);
             cpvcItems+="\n------------------------------------------------------------------------------------------------------------------------------------\n"+params;
           }else if(fieldName.startsWith("UPVC")){
+            params=convertMmToInchCpvc(params);
             upvcItems+="\n-------------------------------------------------------------------------------------------------------------------------------------\n"+params;
           }else if(fieldName.startsWith("RPVC")){
             rpvcItems+="\n-------------------------------------------------------------------------------------------------------------------------------------\n"+params;
